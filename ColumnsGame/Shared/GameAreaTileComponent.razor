@@ -1,0 +1,28 @@
+﻿@using ColumnsGame.Enums;
+
+<div class="d-flex justify-content-center align-items-center border border-2 border-tile@(IsColumn ? "-column" : "") tile tile-@Tile.ToString().ToLower()">
+    @if (Tile != Enums.GameAreaTile.Empty)
+    {
+        <i class="@GetTileIconClass() fa-2xl"></i>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public GameAreaTile Tile { get; set; }
+
+    [Parameter]
+    public bool IsColumn { get; set; }
+
+    private string GetTileIconClass() => Tile switch
+    {
+        GameAreaTile.Red => "fa-solid fa-spider",
+        GameAreaTile.Orange => "fa-solid fa-fire",
+        GameAreaTile.Yellow => "fa-solid fa-sun",
+        GameAreaTile.Green => "fa-solid fa-gem",
+        GameAreaTile.Blue => "fa-solid fa-snowflake",
+        GameAreaTile.Purple => "fa-solid fa-ghost",
+        GameAreaTile.Joker => "fa-solid fa-bomb",
+        _ => throw new ArgumentException("Invalid tile type", Tile.ToString()),
+    };
+}

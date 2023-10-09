@@ -1,0 +1,45 @@
+﻿@using ColumnsGame.Constants;
+@using ColumnsGame.Enums;
+@using ColumnsGame.Models;
+
+@if (GameParameters.GameAreaWidth > 0 && GameParameters.GameAreaHeight > 0)
+{
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column border border-5 border-game-area">
+            @for (int y = 0; y < GameParameters.GameAreaHeight; y++)
+            {
+                <div class="d-flex flex-row">
+                    @for (int x = 0; x < GameParameters.GameAreaWidth; x++)
+                    {
+                        <GameAreaTileComponent Tile="@GetTile(x, y)" IsColumn="@IsColumnTile(x, y)"></GameAreaTileComponent>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public GameAreaTile[,] Tiles { get; set; }
+
+    [Parameter]
+    public GameAreaTile[]? Column { get; set; }
+
+    [Parameter]
+    public GameAreaPosition ColumnPosition { get; set; }
+
+
+    private bool IsColumnTile(int x, int y)
+    {
+        return Column?.Length > 0 &&
+            x == ColumnPosition.X &&
+            y >= ColumnPosition.Y &&
+            y < ColumnPosition.Y + Column.Length;
+    }
+
+    private GameAreaTile GetTile(int x, int y)
+    {
+        return IsColumnTile(x, y) ? Column[y - ColumnPosition.Y] : Tiles[x, y];
+    }
+}

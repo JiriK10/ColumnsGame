@@ -1,0 +1,46 @@
+.border-tile {
+    border-color: #999 !important;
+}
+
+.border-tile-column {
+    border-color: #FBC02D !important;
+}
+
+    .border-tile-column.tile {
+        background-color: #000;
+    }
+
+.tile {
+    width: 3em;
+    height: 3em;
+    margin: 1px;
+    background-color: #444;
+}
+
+.tile-red i {
+    color: #F44336;
+}
+
+.tile-orange i {
+    color: #FF6D00;
+}
+
+.tile-yellow i {
+    color: #FFEE58;
+}
+
+.tile-green i {
+    color: #00C853;
+}
+
+.tile-blue i {
+    color: #2196F3;
+}
+
+.tile-purple i {
+    color: #D500F9;
+}
+
+.tile-joker i {
+    color: #FFF;
+}

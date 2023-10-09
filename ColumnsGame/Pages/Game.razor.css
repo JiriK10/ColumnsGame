@@ -1,0 +1,13 @@
+.area {
+    margin-top: 3em;
+}
+
+.score {
+    font-size: 2em;
+    font-weight: bold;
+    color: #0277BD;
+}
+
+.instructions {
+    color: #666;
+}

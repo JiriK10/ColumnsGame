@@ -1,0 +1,133 @@
+﻿@page "/game"
+@using ColumnsGame.Constants;
+@using ColumnsGame.Enums;
+@using ColumnsGame.Models;
+@inject ColumnsGame.Models.IColumnFallManager ColumnFallManager;
+@inject ColumnsGame.Models.IGameArea GameAreaModel;
+
+<PageTitle>Columns</PageTitle>
+
+<div class="area d-flex flex-column align-items-center" @ref="focusArea" tabindex="0" @onkeydown="@KeyDown">
+    <div class="score mb-2">
+        Score: @score
+    </div>
+    <div class="mb-1">
+        @for (int i = 0; i < GameParameters.PlayerColumnSize; i++)
+        {
+            <GameAreaTileComponent Tile="@ColumnFallManager.NextColumn[i]" IsColumn></GameAreaTileComponent>
+        }
+    </div>
+    <GameAreaComponent Tiles="@GameAreaModel.Tiles" Column="@(evaluating ? null : ColumnFallManager.CurrentColumn)" ColumnPosition="@ColumnFallManager.ColumnPosition"></GameAreaComponent>
+    <div class="instructions text-center">
+        <i class="fa-solid fa-gamepad"></i>
+        Use arrows and spacebar
+    </div>
+</div>
+
+@code {
+    private ElementReference focusArea;
+
+    private bool evaluating = false;
+
+    private DateTime? startTime = null;
+    private int score  = 0;
+
+    protected override void OnInitialized()
+    {
+        score = 0;
+        startTime = DateTime.Now;
+
+        GameAreaModel.InitTiles();
+
+        ColumnFallManager.OnFall += (sender, e) => StateHasChanged();
+        ColumnFallManager.OnFallCompleted += EvaluateFall;
+        ColumnFallManager.Start(1000);
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        focusArea.FocusAsync();
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+    /// <summary>
+    /// Keyboard events handler
+    /// </summary>
+    private void KeyDown(KeyboardEventArgs e)
+    {
+        if (evaluating)
+            return;
+
+        if (e.Code == "Space")
+        {
+            ColumnFallManager.RotateCurrentColumn();
+            return;
+        }
+
+        MoveDirection? direction = e.Code switch
+        {
+            "ArrowLeft" => MoveDirection.Left,
+            "ArrowRight" => MoveDirection.Right,
+            "ArrowDown" => MoveDirection.Down,
+            _ => null,
+        };
+        if (direction != null)
+        {
+            ColumnFallManager.MoveCurrentColumn(direction.Value);
+        }
+    }
+
+    /// <summary>
+    /// Animated evaluation of game area after column fall is finished
+    /// </summary>
+    private void EvaluateFall(object? sender, EventArgs e)
+    {
+        evaluating = true;
+        Task.Run(async () =>
+        {
+            bool stopGame = !GameAreaModel.SetColumn(ColumnFallManager.ColumnPosition, ColumnFallManager.CurrentColumn);
+            StateHasChanged();
+
+            if (stopGame)
+            {
+                // TODO: Finish game - highscore - go to start
+                //score += 10000;
+                //StateHasChanged();
+            }
+            else
+            {
+                int lastRoundScore = 1;
+                while (lastRoundScore > 0)
+                {
+                    lastRoundScore = 0;
+
+                    int evaluatedScore = 1;
+                    while (evaluatedScore > 0)
+                    {
+                        evaluatedScore = GameAreaModel.Evaluate();
+                        if (evaluatedScore > 0)
+                        {
+                            score += evaluatedScore;
+                            lastRoundScore += evaluatedScore;
+                            StateHasChanged();
+                            await Task.Delay(GameParameters.DelayBetweenEvaluationSteps);
+                        }
+                    }
+
+                    if (lastRoundScore > 0 && GameAreaModel.ShakeDown())
+                    {
+                        StateHasChanged();
+                        await Task.Delay(GameParameters.DelayBetweenEvaluationSteps);
+                    }
+                    else
+                    {
+                        lastRoundScore = 0;
+                    }
+                }
+                ColumnFallManager.StartNextColumn();
+            }
+            evaluating = false;
+            StateHasChanged();
+        });
+    }
+}

@@ -1,0 +1,28 @@
+.game-icon {
+    margin-top: 6em;
+}
+    .game-icon i {
+        font-size: 20em;
+        color: #D84315;
+    }
+
+.title {
+    margin-top: -1.35em;
+    font-size: 3em;
+    color: #FBC02D;
+}
+
+.btn-start {
+    margin-top: 0.8em;
+    width: 10em;
+    height: 1.75em;
+    font-size: 3em;
+    font-weight: bold;
+    color: #333;
+    background-color: #FDD835;
+    border-radius: .3em;
+}
+
+    .btn-start:hover {
+        background-color: #FBC02D;
+    }

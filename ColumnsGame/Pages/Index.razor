@@ -1,0 +1,12 @@
+﻿@page "/"
+@inject NavigationManager Navigation
+
+<PageTitle>Columns</PageTitle>
+
+<div class="d-flex flex-column align-items-center">
+    <div class="game-icon">
+        <i class="fa-solid fa-building-columns"></i>
+    </div>
+    <div class="title">Columns</div>
+    <button class="btn btn-start" @onclick="@(() => Navigation.NavigateTo("/game"))">Start</button>
+</div>
