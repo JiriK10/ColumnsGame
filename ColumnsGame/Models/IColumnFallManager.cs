@@ -37,11 +37,6 @@ public interface IColumnFallManager
     public void Start(int speed);
 
     /// <summary>
-    /// Start fall for next column
-    /// </summary>
-    public void StartNextColumn();
-
-    /// <summary>
     /// Rotates tiles in current column
     /// </summary>
     public void RotateCurrentColumn();

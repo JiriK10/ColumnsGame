@@ -27,31 +27,29 @@ public class ColumnFallManager : IColumnFallManager
     public event EventHandler OnFall;
     public event EventHandler OnFall​Completed;
 
-    private int fallSpeed = 0;
     private System.Timers.Timer fallTimer { get; set; }
 
+
+    public void Start(int speed)
+    {
+        ColumnPosition = _gameArea.GetColumnStartPosition();
+        CurrentColumn = NextColumn.Length > 0 ? NextColumn : GenerateColumn();
+        NextColumn = GenerateColumn();
+
+        StartTimer(speed);
+    }
 
     /// <summary>
     /// Generates new random column
     /// </summary>
     private GameAreaTile[] GenerateColumn() => _columnGenerator.GenerateColumn(GameParameters.PlayerColumnSize, GameParameters.ShortestScoredLine - 1, true);
 
-    public void Start(int speed)
-    {
-        ColumnPosition = _gameArea.GetColumnStartPosition();
-        CurrentColumn = GenerateColumn();
-        NextColumn = GenerateColumn();
-
-        fallSpeed = speed;
-        StartTimer();
-    }
-
     /// <summary>
     /// Starts fall timer
     /// </summary>
-    private void StartTimer()
+    private void StartTimer(int speed)
     {
-        fallTimer = new System.Timers.Timer(fallSpeed);
+        fallTimer = new System.Timers.Timer(speed);
         fallTimer.AutoReset = true;
         fallTimer.Elapsed += TimerTick;
         fallTimer.Start();
@@ -80,14 +78,6 @@ public class ColumnFallManager : IColumnFallManager
     private bool IsFallEnd()
     {
         return !_gameArea.IsEmpty(ColumnEndPosition.ShiftPosition(0, 1));
-    }
-
-    public void StartNextColumn()
-    {
-        ColumnPosition = _gameArea.GetColumnStartPosition();
-        CurrentColumn = NextColumn;
-        NextColumn = GenerateColumn();
-        StartTimer();
     }
 
     public void RotateCurrentColumn()

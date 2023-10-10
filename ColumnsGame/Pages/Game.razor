@@ -41,7 +41,7 @@
 
         ColumnFallManager.OnFall += (sender, e) => StateHasChanged();
         ColumnFallManager.OnFallCompleted += EvaluateFall;
-        ColumnFallManager.Start(1000);
+        ColumnFallManager.Start(GetGameSpeed());
     }
 
     protected override Task OnAfterRenderAsync(bool firstRender)
@@ -76,6 +76,11 @@
             ColumnFallManager.MoveCurrentColumn(direction.Value);
         }
     }
+
+    /// <summary>
+    /// Generates new random column
+    /// </summary>
+    private int GetGameSpeed() => Math.Max(GameParameters.GameSpeedFastestAllowed, GameParameters.GameSpeedStart -  score);
 
     /// <summary>
     /// Animated evaluation of game area after column fall is finished
@@ -124,7 +129,7 @@
                         lastRoundScore = 0;
                     }
                 }
-                ColumnFallManager.StartNextColumn();
+                ColumnFallManager.Start(GetGameSpeed());
             }
             evaluating = false;
             StateHasChanged();
