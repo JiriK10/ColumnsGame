@@ -10,6 +10,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddSingleton<IColumnGenerator, ColumnGenerator>();
 builder.Services.AddSingleton<IColumnFallManager, ColumnFallManager>();
 builder.Services.AddSingleton<IGameArea, GameArea>();
+builder.Services.AddSingleton<IHighScores, HighScores>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

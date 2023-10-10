@@ -16,4 +16,6 @@ public static class GameParameters
     public const int GameSpeedFastestAllowed = 100;
 
     public const int DelayBetweenEvaluationSteps = 1000;
+
+    public const int HighScoresListLength = 10;
 }
