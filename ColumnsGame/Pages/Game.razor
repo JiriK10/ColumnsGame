@@ -2,6 +2,7 @@
 @using ColumnsGame.Constants;
 @using ColumnsGame.Enums;
 @using ColumnsGame.Models;
+@inject NavigationManager Navigation
 @inject ColumnsGame.Models.IColumnFallManager ColumnFallManager;
 @inject ColumnsGame.Models.IGameArea GameAreaModel;
 @inject ColumnsGame.Models.IHighScores HighScores;
@@ -81,7 +82,7 @@
     /// <summary>
     /// Generates new random column
     /// </summary>
-    private int GetGameSpeed() => Math.Max(GameParameters.GameSpeedFastestAllowed, GameParameters.GameSpeedStart -  score);
+    private int GetGameSpeed() => Math.Max(GameParameters.GameSpeedFastestAllowed, GameParameters.GameSpeedStart - score * GameParameters.GameSpeedUpCoefficient);
 
     /// <summary>
     /// Animated evaluation of game area after column fall is finished
@@ -96,44 +97,65 @@
 
             if (stopGame)
             {
-                // TODO: Finish game - highscore - go to start
-                //score += 10000;
-                //StateHasChanged();
+                EvaluateFall_Stop();
             }
             else
             {
-                int lastRoundScore = 1;
-                while (lastRoundScore > 0)
-                {
-                    lastRoundScore = 0;
-
-                    int evaluatedScore = 1;
-                    while (evaluatedScore > 0)
-                    {
-                        evaluatedScore = GameAreaModel.Evaluate();
-                        if (evaluatedScore > 0)
-                        {
-                            score += evaluatedScore;
-                            lastRoundScore += evaluatedScore;
-                            StateHasChanged();
-                            await Task.Delay(GameParameters.DelayBetweenEvaluationSteps);
-                        }
-                    }
-
-                    if (lastRoundScore > 0 && GameAreaModel.ShakeDown())
-                    {
-                        StateHasChanged();
-                        await Task.Delay(GameParameters.DelayBetweenEvaluationSteps);
-                    }
-                    else
-                    {
-                        lastRoundScore = 0;
-                    }
-                }
-                ColumnFallManager.Start(GetGameSpeed());
+                await EvaluateFall_NextFall();
+                evaluating = false;
+                StateHasChanged();
             }
-            evaluating = false;
-            StateHasChanged();
         });
+    }
+
+    /// <summary>
+    /// EvaluateFall - Game over
+    /// </summary>
+    private void EvaluateFall_Stop()
+    {
+        if (score > 0 && HighScores.IsHighScore(score))
+        {
+            Navigation.NavigateTo($"/new-high-score/{ score }");
+        }
+        else
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+
+    /// <summary>
+    /// EvaluateFall - Game continues to next rounds
+    /// </summary>
+    private async Task EvaluateFall_NextFall()
+    {
+        int lastRoundScore = 1;
+        while (lastRoundScore > 0)
+        {
+            lastRoundScore = 0;
+
+            int evaluatedScore = 1;
+            while (evaluatedScore > 0)
+            {
+                evaluatedScore = GameAreaModel.Evaluate();
+                if (evaluatedScore > 0)
+                {
+                    score += evaluatedScore;
+                    lastRoundScore += evaluatedScore;
+                    StateHasChanged();
+                    await Task.Delay(GameParameters.DelayBetweenEvaluationSteps);
+                }
+            }
+
+            if (lastRoundScore > 0 && GameAreaModel.ShakeDown())
+            {
+                StateHasChanged();
+                await Task.Delay(GameParameters.DelayBetweenEvaluationSteps);
+            }
+            else
+            {
+                lastRoundScore = 0;
+            }
+        }
+        ColumnFallManager.Start(GetGameSpeed());
     }
 }

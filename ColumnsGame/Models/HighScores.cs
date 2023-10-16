@@ -1,28 +1,39 @@
-﻿using ColumnsGame.Constants;
+﻿using Blazored.LocalStorage;
+using ColumnsGame.Constants;
 
 namespace ColumnsGame.Models;
 
  public class HighScores : IHighScores
 {
+    private readonly ILocalStorageService _localStorage;
+
+    public HighScores(ILocalStorageService localStorage)
+    {
+        _localStorage = localStorage;
+    }
+
+
+    private const string StorageKeyName = "HighScores";
+
     public List<HighScore> Scores { get; private set; } = new List<HighScore>();
 
-    public void Load()
+    public async Task Load()
     {
-        // TODO
+        Scores = await _localStorage.GetItemAsync<List<HighScore>>(StorageKeyName) ?? new List<HighScore>();
     }
 
-    public void Save()
+    public async Task Save()
     {
-        // TODO
+        await _localStorage.SetItemAsync(StorageKeyName, Scores);
     }
 
-    public bool AddScore(int score, string player)
+    public bool IsHighScore(int score)
     {
-        if (Scores.Where(highScore => highScore.Score >= score).Count() >= GameParameters.HighScoresListLength)
-        {
-            return false;
-        }
+        return Scores.Where(highScore => highScore.Score >= score).Count() < GameParameters.HighScoresListLength;
+    }
 
+    public void AddScore(int score, string player)
+    {
         Scores.Add(new HighScore()
         {
             Score = score,
@@ -33,6 +44,5 @@ namespace ColumnsGame.Models;
             .ThenBy(score => score.TimeStamp)
             .Take(GameParameters.HighScoresListLength)
             .ToList();
-        return true;
     }
 }

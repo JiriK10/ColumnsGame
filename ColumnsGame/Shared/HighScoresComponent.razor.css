@@ -1,0 +1,21 @@
+.highscores {
+    margin-top: 6rem;
+}
+
+.highscore {
+    font-weight: bold;
+    color: #5D4037;
+}
+
+    .highscore:not(:last-child) {
+        border-bottom: 1px solid #D84315;
+    }
+
+    .highscore .score,
+    .highscore .player {
+        color: #D84315;
+    }
+
+    .highscore .timestamp {
+        font-size: 0.75rem;
+    }

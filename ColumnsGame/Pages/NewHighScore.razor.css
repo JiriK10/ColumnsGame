@@ -1,0 +1,46 @@
+.header-icon {
+    margin-top: 0.3em;
+    font-size: 20em;
+    line-height: 1;
+}
+
+.header-text {
+    font-size: 3em;
+    color: #FBC02D;
+}
+
+.input-label {
+    margin-top: 2em;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+.input {
+    width: 20em;
+    font-size: 1.5em;
+    padding: .3em .6em;
+    border: 2px solid #FDD835;
+    border-radius: .6em;
+    outline: none;
+}
+
+
+    .input:focus {
+        border-color: #FBC02D;
+    }
+
+.btn-save {
+    margin-top: 0.3em;
+    width: 10em;
+    height: 1.75em;
+    font-size: 3em;
+    font-weight: bold;
+    color: #333;
+    background-color: #FDD835;
+    border-radius: .3em;
+}
+
+    .btn-save:hover {
+        background-color: #FBC02D;
+    }

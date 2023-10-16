@@ -1,0 +1,29 @@
+﻿@page "/new-high-score/{Score:int}"
+@inject NavigationManager Navigation
+@inject ColumnsGame.Models.IHighScores HighScores;
+
+<PageTitle>Columns</PageTitle>
+
+<div class="d-flex flex-column align-items-center">
+    <div class="header-icon">🥳</div>
+    <div class="header-text">You have achieved new high score @(Score)!</div>
+
+    <div class="input-label">Please enter your name</div>
+    <input class="input" @bind="Player" />
+    <button class="btn btn-save" @onclick="@Save">Save</button>
+</div>
+
+
+@code {
+    [Parameter]
+    public int Score { get; set; }
+
+    private string? Player { get; set; }
+
+    private async Task Save()
+    {
+        HighScores.AddScore(Score, string.IsNullOrEmpty(Player) ? "Unknown gamer" : Player);
+        await HighScores.Save();
+        Navigation.NavigateTo("/");
+    }
+}

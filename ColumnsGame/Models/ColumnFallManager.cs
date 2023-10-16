@@ -63,12 +63,12 @@ public class ColumnFallManager : IColumnFallManager
         if (IsFallEnd())
         {
             fallTimer.Stop();
-            OnFall​Completed(this, null);
+            OnFall​Completed.Invoke(this, null);
         }
         else
         {
             MoveCurrentColumn(MoveDirection.Down);
-            OnFall(this, null);
+            OnFall.Invoke(this, null);
         }
     }
 

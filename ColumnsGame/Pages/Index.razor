@@ -1,12 +1,32 @@
 ﻿@page "/"
 @inject NavigationManager Navigation
+@inject ColumnsGame.Models.IHighScores HighScores;
 
 <PageTitle>Columns</PageTitle>
 
-<div class="d-flex flex-column align-items-center">
-    <div class="game-icon">
-        <i class="fa-solid fa-building-columns"></i>
+<div class="d-flex flex-row">
+    <div class="w-25 ps-2">
+        <HighScoresComponent HighScores="@HighScores.Scores"></HighScoresComponent>
     </div>
-    <div class="title">Columns</div>
-    <button class="btn btn-start" @onclick="@(() => Navigation.NavigateTo("/game"))">Start</button>
+    <div class="d-flex flex-column align-items-center w-50">
+        <div class="game-icon">
+            <i class="fa-solid fa-building-columns"></i>
+        </div>
+        <div class="title">Columns</div>
+        <button class="btn btn-start" @onclick="@(() => Navigation.NavigateTo("/game"))">Start</button>
+    </div>
+    <div class="w-25 pe-2">
+        <HighScoresComponent HighScores="@HighScores.Scores"></HighScoresComponent>
+    </div>
 </div>
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        if (HighScores.Scores.Count < 1)
+        {
+            await HighScores.Load();
+        }
+    }
+}

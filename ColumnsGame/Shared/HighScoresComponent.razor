@@ -1,0 +1,19 @@
+﻿@using ColumnsGame.Models;
+
+<div class="container highscores">
+    @for (int i = 0; i < HighScores.Count; i++)
+    {
+        var highScore = HighScores[i];
+        <div class="row highscore py-1">
+            <div class="col-1 number d-flex align-items-center justify-content-start">@(i + 1).</div>
+            <div class="col-3 score d-flex align-items-center justify-content-center">@highScore.Score</div>
+            <div class="col-5 player d-flex align-items-center justify-content-center">@highScore.Player</div>
+            <div class="col-3 timestamp d-flex align-items-center justify-content-center">@highScore.TimeStamp.ToString("dd.MM.yyyy HH:mm")</div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<HighScore> HighScores { get; set; }
+}
