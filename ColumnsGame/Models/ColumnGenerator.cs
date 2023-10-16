@@ -29,7 +29,7 @@ public class ColumnGenerator : IColumnGenerator
             while (column[i] == GameAreaTile.Empty)
             {
                 GameAreaTile randomTile = GenerateGemTile(joker);
-                bool randomIsSame = randomTile == sequenceTile || randomTile == GameAreaTile.Joker;
+                bool randomIsSame = randomTile == sequenceTile || randomTile == GameAreaTile.Joker || sequenceTile == GameAreaTile.Joker;
                 if (!randomIsSame || sequence < maxSame)
                 {
                     column[i] = randomTile;
