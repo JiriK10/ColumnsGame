@@ -1,6 +1,4 @@
-﻿using ColumnsGame.Enums;
-
-namespace ColumnsGame.Models;
+﻿namespace ColumnsGame.Models;
 
 public interface IHighScores
 {

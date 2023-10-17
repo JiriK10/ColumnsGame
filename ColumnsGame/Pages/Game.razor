@@ -7,7 +7,7 @@
 @inject ColumnsGame.Models.IGameArea GameAreaModel;
 @inject ColumnsGame.Models.IHighScores HighScores;
 
-<PageTitle>Columns</PageTitle>
+<PageTitle>Columns 🎮</PageTitle>
 
 <div class="area d-flex flex-column align-items-center" @ref="focusArea" tabindex="0" @onkeydown="@KeyDown">
     <div class="score mb-2">
@@ -16,12 +16,12 @@
     <div class="mb-1">
         @for (int i = 0; i < GameParameters.PlayerColumnSize; i++)
         {
-            <GameAreaTileComponent Tile="@ColumnFallManager.NextColumn[i]" IsColumn></GameAreaTileComponent>
+            <GameAreaTileComponent Tile="@ColumnFallManager.NextColumn[i]" IsColumn />
         }
     </div>
-    <GameAreaComponent Tiles="@GameAreaModel.Tiles" Column="@(evaluating ? null : ColumnFallManager.CurrentColumn)" ColumnPosition="@ColumnFallManager.ColumnPosition"></GameAreaComponent>
+    <GameAreaComponent Tiles="@GameAreaModel.Tiles" Column="@(evaluating ? null : ColumnFallManager.CurrentColumn)" ColumnPosition="@ColumnFallManager.ColumnPosition" />
     <div class="instructions text-center">
-        <i class="fa-solid fa-gamepad"></i>
+        <i class="fa-solid fa-gamepad" />
         Use arrows and spacebar
     </div>
 </div>
@@ -113,14 +113,8 @@
     /// </summary>
     private void EvaluateFall_Stop()
     {
-        if (score > 0 && HighScores.IsHighScore(score))
-        {
-            Navigation.NavigateTo($"/new-high-score/{ score }");
-        }
-        else
-        {
-            Navigation.NavigateTo("/");
-        }
+        string uri = score > 0 && HighScores.IsHighScore(score) ? $"/new-high-score/{score}" : "/";
+        Navigation.NavigateTo(uri);
     }
 
     /// <summary>

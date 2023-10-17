@@ -11,7 +11,7 @@
                 <div class="d-flex flex-row">
                     @for (int x = 0; x < GameParameters.GameAreaWidth; x++)
                     {
-                        <GameAreaTileComponent Tile="@GetTile(x, y)" IsColumn="@IsColumnTile(x, y)"></GameAreaTileComponent>
+                        <GameAreaTileComponent Tile="@GetTile(x, y)" IsColumn="@IsColumnTile(x, y)" />
                     }
                 </div>
             }
